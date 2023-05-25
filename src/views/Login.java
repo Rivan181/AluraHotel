@@ -1,24 +1,32 @@
 package views;
 
-import java.awt.EventQueue;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 import java.awt.Color;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.ImageIcon;
-import javax.swing.JTextField;
-import javax.swing.JSeparator;
-import java.awt.SystemColor;
+import java.awt.EventQueue;
 import java.awt.Font;
-import javax.swing.JPasswordField;
-import javax.swing.SwingConstants;
+import java.awt.SystemColor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.sql.Connection;
+import java.sql.Statement;
 
-public class Login extends JFrame {
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JSeparator;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
+
+import com.mysql.cj.protocol.Resultset;
+import com.mysql.cj.xdevapi.Result;
+
+import infra.MySQLConnection;
+
+public class Login extends JFrame  {
 
 	/**
 	 * 
@@ -192,7 +200,12 @@ public class Login extends JFrame {
 			}
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				Login();
+				try {
+					Login();
+				} catch (ClassNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		});
 		btnLogin.setBackground(SystemColor.textHighlight);
@@ -234,13 +247,33 @@ public class Login extends JFrame {
 		header.setLayout(null);
 	}
 	
-	private void Login() {
-		 String Usuario= "admin";
-	     String Contraseña="admin";
+	
 
-	        String contrase=new String (txtContrasena.getPassword());
+		
+	
+	
+	private void Login() throws ClassNotFoundException {
+	/*	 String Usuario= "a";
+	     String Contraseña="ad";
+*/
+		MySQLConnection cc = new MySQLConnection() ;
+		Connection con =  cc.Conexion();
+		    int resultado = 0;
+		    String login = txtUsuario.getText();
+	        String clave=String.valueOf(txtContrasena.getPassword());
+	        
+	        String SQL = "select * from usuarios where login=' " +login+" ' and clave=´"+clave+" '         ";
+	        
+	        try {
+	        Statement st = con.createStatement();
+	        Resultset rs = (Resultset) st.executeQuery(SQL);
+	        
+				
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
 
-	        if(txtUsuario.getText().equals(Usuario) && contrase.equals(Contraseña)){
+	        if(txtUsuario.getText().equals(login) && clave.equals(clave)){
 	            MenuUsuario menu = new MenuUsuario();
 	            menu.setVisible(true);
 	            dispose();	 
