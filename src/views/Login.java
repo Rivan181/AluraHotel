@@ -8,6 +8,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.Statement;
 
 import javax.swing.ImageIcon;
@@ -21,9 +22,6 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
-import com.mysql.cj.protocol.Resultset;
-import com.mysql.cj.xdevapi.Result;
-
 import infra.MySQLConnection;
 
 public class Login extends JFrame  {
@@ -34,7 +32,7 @@ public class Login extends JFrame  {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField txtUsuario;
-	private JPasswordField txtContrasena;
+	protected JPasswordField txtContrasena;
 	int xMouse, yMouse;
 	private JLabel labelExit;
 
@@ -42,6 +40,7 @@ public class Login extends JFrame  {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -116,13 +115,13 @@ public class Login extends JFrame  {
 		labelExit.setFont(new Font("Roboto", Font.PLAIN, 18));
 		labelExit.setHorizontalAlignment(SwingConstants.CENTER);		
 		
-		txtUsuario = new JTextField();
-		txtUsuario.addMouseListener(new MouseAdapter() {
+		setTxtUsuario(new JTextField());
+		getTxtUsuario().addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-				 if (txtUsuario.getText().equals("Ingrese su nombre de usuario")) {
-					 txtUsuario.setText("");
-					 txtUsuario.setForeground(Color.black);
+				 if (getTxtUsuario().getText().equals("Ingrese su nombre de usuario")) {
+					 getTxtUsuario().setText("");
+					 getTxtUsuario().setForeground(Color.black);
 			        }
 			        if (String.valueOf(txtContrasena.getPassword()).isEmpty()) {
 			        	txtContrasena.setText("********");
@@ -130,13 +129,13 @@ public class Login extends JFrame  {
 			        }
 			}
 		});
-		txtUsuario.setFont(new Font("Roboto", Font.PLAIN, 16));
-		txtUsuario.setText("Ingrese su nombre de usuario");
-		txtUsuario.setBorder(javax.swing.BorderFactory.createEmptyBorder());
-		txtUsuario.setForeground(SystemColor.activeCaptionBorder);
-		txtUsuario.setBounds(65, 256, 324, 32);
-		panel.add(txtUsuario);
-		txtUsuario.setColumns(10);
+		getTxtUsuario().setFont(new Font("Roboto", Font.PLAIN, 16));
+		getTxtUsuario().setText("Ingrese su nombre de usuario");
+		getTxtUsuario().setBorder(javax.swing.BorderFactory.createEmptyBorder());
+		getTxtUsuario().setForeground(SystemColor.activeCaptionBorder);
+		getTxtUsuario().setBounds(65, 256, 324, 32);
+		panel.add(getTxtUsuario());
+		getTxtUsuario().setColumns(10);
 		
 		JSeparator separator = new JSeparator();
 		separator.setBackground(new Color(0, 120, 215));
@@ -163,9 +162,9 @@ public class Login extends JFrame  {
 					txtContrasena.setText("");
 					txtContrasena.setForeground(Color.black);
 		        }
-		        if (txtUsuario.getText().isEmpty()) {
-		        	txtUsuario.setText("Ingrese su nombre de usuario");
-		        	txtUsuario.setForeground(Color.gray);
+		        if (getTxtUsuario().getText().isEmpty()) {
+		        	getTxtUsuario().setText("Ingrese su nombre de usuario");
+		        	getTxtUsuario().setForeground(Color.gray);
 		        }
 			}
 		});
@@ -249,38 +248,37 @@ public class Login extends JFrame  {
 	
 	
 
-		
-	
-	
-	private void Login() throws ClassNotFoundException {
-	/*	 String Usuario= "a";
-	     String Contraseña="ad";
-*/
-		MySQLConnection cc = new MySQLConnection() ;
-		Connection con =  cc.Conexion();
-		    int resultado = 0;
-		    String login = txtUsuario.getText();
-	        String clave=String.valueOf(txtContrasena.getPassword());
-	        
-	        String SQL = "select * from usuarios where login=' " +login+" ' and clave=´"+clave+" '         ";
-	        
-	        try {
-	        Statement st = con.createStatement();
-	        Resultset rs = (Resultset) st.executeQuery(SQL);
-	        
-				
-			} catch (Exception e) {
-				// TODO: handle exception
-			}
 
-	        if(txtUsuario.getText().equals(login) && clave.equals(clave)){
-	            MenuUsuario menu = new MenuUsuario();
-	            menu.setVisible(true);
-	            dispose();	 
-	        }else {
-	            JOptionPane.showMessageDialog(this, "Usuario o Contraseña no válidos");
+	
+	
+	public void Login() throws ClassNotFoundException {
+	    int resultado = 0;
+	    MySQLConnection cc = new MySQLConnection();
+	    Connection con = cc.Conexion();
+	    String usuario = txtUsuario.getText();
+	    String pass = String.valueOf(txtContrasena.getPassword());
+	    String SQL = "SELECT * FROM usuarios WHERE login='" + usuario + "' AND clave='" + pass + "'";
+
+	    try {
+	        Statement st = con.createStatement();
+	        ResultSet rs = st.executeQuery(SQL);
+	        
+	        if (rs.next()) {
+	            resultado = 1;
+	            System.out.println("acallega");
+	            if (resultado == 1) {
+	                MenuUsuario menu = new MenuUsuario();
+	                menu.setVisible(true);
+	                this.dispose();
+	            }
+	        } else {
+	            JOptionPane.showMessageDialog(null, "Error en el acceso");
 	        }
-	} 
+	    } catch (Exception e) {
+	        // Manejar la excepción aquí
+	    }
+	}
+
 	 private void headerMousePressed(java.awt.event.MouseEvent evt) {
 	        xMouse = evt.getX();
 	        yMouse = evt.getY();
@@ -291,4 +289,12 @@ public class Login extends JFrame  {
 	        int y = evt.getYOnScreen();
 	        this.setLocation(x - xMouse, y - yMouse);
 }
+
+		public JTextField getTxtUsuario() {
+			return txtUsuario;
+		}
+
+		public void setTxtUsuario(JTextField txtUsuario) {
+			this.txtUsuario = txtUsuario;
+		}
 }

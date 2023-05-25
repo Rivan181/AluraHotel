@@ -11,15 +11,24 @@ import javax.swing.ImageIcon;
 import java.awt.Color;
 import javax.swing.JTextField;
 import com.toedter.calendar.JDateChooser;
+
+import Logica.DatosReserva;
+import infra.MySQLConnection;
+
 import java.awt.Font;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.Toolkit;
 import java.beans.PropertyChangeListener;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.beans.PropertyChangeEvent;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
@@ -29,6 +38,8 @@ import javax.swing.border.LineBorder;
 @SuppressWarnings("serial")
 public class ReservasView extends JFrame {
 
+	protected static Date EntradaString = null;
+	protected static Date SalidaString = null;
 	private JPanel contentPane;
 	public static JTextField txtValor;
 	public static JDateChooser txtFechaEntrada;
@@ -37,6 +48,7 @@ public class ReservasView extends JFrame {
 	int xMouse, yMouse;
 	private JLabel labelExit;
 	private JLabel labelAtras;
+	private DatosReserva DR;
 
 	/**
 	 * Launch the application.
@@ -45,6 +57,7 @@ public class ReservasView extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					
 					ReservasView frame = new ReservasView();
 					frame.setVisible(true);
 				} catch (Exception e) {
@@ -58,6 +71,7 @@ public class ReservasView extends JFrame {
 	 * Create the frame.
 	 */
 	public ReservasView() {
+		
 		super("Reserva");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(ReservasView.class.getResource("/imagenes/aH-40px.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -72,6 +86,7 @@ public class ReservasView extends JFrame {
 		setLocationRelativeTo(null);
 		setUndecorated(true);
 		
+		DR = new DatosReserva();
 
 		
 		JPanel panel = new JPanel();
@@ -254,6 +269,10 @@ public class ReservasView extends JFrame {
 		txtFechaEntrada.setDateFormatString("yyyy-MM-dd");
 		txtFechaEntrada.setFont(new Font("Roboto", Font.PLAIN, 18));
 		panel.add(txtFechaEntrada);
+		
+	
+		
+		
 
 		txtFechaSalida = new JDateChooser();
 		txtFechaSalida.getCalendarButton().setIcon(new ImageIcon(ReservasView.class.getResource("/imagenes/icon-reservas.png")));
@@ -271,7 +290,9 @@ public class ReservasView extends JFrame {
 		txtFechaSalida.getCalendarButton().setBackground(SystemColor.textHighlight);
 		txtFechaSalida.setBorder(new LineBorder(new Color(255, 255, 255), 0));
 		panel.add(txtFechaSalida);
-
+		
+		
+	
 		txtValor = new JTextField();
 		txtValor.setBackground(SystemColor.text);
 		txtValor.setHorizontalAlignment(SwingConstants.CENTER);
@@ -296,9 +317,26 @@ public class ReservasView extends JFrame {
 		btnsiguiente.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if (ReservasView.txtFechaEntrada.getDate() != null && ReservasView.txtFechaSalida.getDate() != null) {		
+				Date fechaEntrada = txtFechaEntrada.getDate();
+				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+				String fEntrada = dateFormat.format(fechaEntrada);
+				
+				Date fechaSalida = txtFechaSalida.getDate();
+				SimpleDateFormat dateFormate = new SimpleDateFormat("yyyy-MM-dd");
+				String fSalida = dateFormate.format(fechaSalida);
+//				
+//				String fEntrada = txtFechaEntrada.getDateFormatString();
+//				String fSalida = txtFechaSalida.getDateFormatString();
+				//String txtV = txtValor.getText();
+			    float valor = 3;
+				String Pago = txtFormaPago.getSelectedItem().toString();
+				
+				DR.insertDatos(fEntrada, fSalida, valor, Pago);
+				
+				if	(ReservasView.txtFechaEntrada.getDate() != null && ReservasView.txtFechaSalida.getDate() != null) {		
 					RegistroHuesped registro = new RegistroHuesped();
 					registro.setVisible(true);
+					
 				} else {
 					JOptionPane.showMessageDialog(null, "Debes llenar todos los campos.");
 				}
