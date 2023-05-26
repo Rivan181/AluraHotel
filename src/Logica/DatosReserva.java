@@ -41,21 +41,6 @@ public class DatosReserva {
 	}
 	
 	
-//	
-//    try {
-//		
-//		PreparedStatement guardar = con.prepareStatement("INSERT INTO reservas (FechaEntrada,FechaSalida, Valor,FormaDePago) VALUES ( )");
-//		guardar.setString(1, EntradaString);
-//		guardar.setString( 2, SalidaString );
-//		guardar.setString( 3, txtValor.toString());
-//		guardar.setString( 4, txtFormaPago.getSelectedItem().toString() );
-//		guardar.executeUpdate();
-//		JOptionPane.showMessageDialog(null,"datos guardados");
-//	
-//	} catch (ClassNotFoundException | SQLException e1) {
-//		JOptionPane.showMessageDialog(null,"erroe al guardar");
-//		e1.printStackTrace();
-//	}
 
 }
 

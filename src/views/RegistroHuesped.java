@@ -9,6 +9,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
@@ -23,6 +25,8 @@ import javax.swing.border.EmptyBorder;
 
 import com.toedter.calendar.JDateChooser;
 
+import Logica.DatosHuespedes;
+
 @SuppressWarnings("serial")
 public class RegistroHuesped extends JFrame {
 
@@ -36,6 +40,7 @@ public class RegistroHuesped extends JFrame {
 	private JLabel labelExit;
 	private JLabel labelAtras;
 	int xMouse, yMouse;
+	private DatosHuespedes DH;
 
 	/**
 	 * Launch the application.
@@ -68,6 +73,8 @@ public class RegistroHuesped extends JFrame {
 		setLocationRelativeTo(null);
 		setUndecorated(true);
 		contentPane.setLayout(null);
+		
+		DH = new DatosHuespedes();
 		
 		JPanel header = new JPanel();
 		header.setBounds(0, 0, 910, 36);
@@ -251,6 +258,23 @@ public class RegistroHuesped extends JFrame {
 		btnguardar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				Date fechaNac = txtFechaN.getDate();
+				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+				
+				String FechadeNacimiento = dateFormat.format(fechaNac);
+				String Nombre = txtNombre.getText();
+				String Apellido = txtApellido.getText();
+				String Nacionalidad = txtNacionalidad.getSelectedItem().toString();
+				String Telefono = txtTelefono.getText();
+				String IdReserva = txtNreserva.getText();
+				
+				DH.insertDatosH(Nombre, Apellido, FechadeNacimiento, Nacionalidad, Telefono, IdReserva);
+				
+				System.out.println("se imprimio");
+				
+				Exito Exit = new Exito();
+				Exit.setVisible(true);
+				dispose();
 			}
 		});
 		btnguardar.setLayout(null);

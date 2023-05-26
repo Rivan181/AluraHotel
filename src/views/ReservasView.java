@@ -324,10 +324,7 @@ public class ReservasView extends JFrame {
 				Date fechaSalida = txtFechaSalida.getDate();
 				SimpleDateFormat dateFormate = new SimpleDateFormat("yyyy-MM-dd");
 				String fSalida = dateFormate.format(fechaSalida);
-//				
-//				String fEntrada = txtFechaEntrada.getDateFormatString();
-//				String fSalida = txtFechaSalida.getDateFormatString();
-				//String txtV = txtValor.getText();
+
 			    float valor = 3;
 				String Pago = txtFormaPago.getSelectedItem().toString();
 				
