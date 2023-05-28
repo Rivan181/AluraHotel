@@ -10,7 +10,7 @@ import infra.MySQLConnection;
 
 public class DatosReserva {
 	
-	private static final String SQL_INSERT= "INSERT INTO reservas (FechaEntrada,FechaSalida, Valor,FormaDePago) VALUES (?,?,?,?)";
+	private static final String SQL_INSERTR= "INSERT INTO reservas (FechaEntrada,FechaSalida, Valor,FormaDePago) VALUES (?,?,?,?)";
 	private PreparedStatement PS;
 	private final  MySQLConnection CN;
 	
@@ -20,15 +20,19 @@ public class DatosReserva {
 	}
 	
 	public int insertDatos(String fEntrada, String fSalida, float valor, String pago ) {
+		
+		
 		try {
-			PS = CN.Conexion().prepareStatement(SQL_INSERT);
+			PS = CN.Conexion().prepareStatement(SQL_INSERTR);
 			PS.setString(1, fEntrada);
 			PS.setString(2,fSalida);
 			PS.setFloat(3, valor);
 			PS.setString(4, pago);
 			int res = PS.executeUpdate();
+			
 			if(res>0) {
 				JOptionPane.showMessageDialog(null, "se guardo la reserva");
+				
 			}
 			
 		} catch (Exception e) {

@@ -11,6 +11,7 @@ import java.awt.event.MouseMotionAdapter;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
@@ -24,6 +25,7 @@ import javax.swing.table.DefaultTableModel;
 
 import Logica.BuscarH;
 import Logica.BuscarR;
+import Logica.DatosFormR;
 
 @SuppressWarnings("serial")
 public class Busqueda extends JFrame {
@@ -37,12 +39,9 @@ public class Busqueda extends JFrame {
 	private JLabel labelAtras;
 	private JLabel labelExit;
 	int xMouse, yMouse;
+	ReservasView RD;
 	
-	private JTextField txtIDres;
-	private JTextField txtFEres;
-	private JTextField txtFSres;
-	private JTextField txtVres;
-	private JTextField txtFPres;
+
 
 	/**
 	 * Launch the application.
@@ -109,6 +108,19 @@ public class Busqueda extends JFrame {
 		JScrollPane scroll_table = new JScrollPane(tbReservas);
 		panel.addTab("Reservas", new ImageIcon(Busqueda.class.getResource("/imagenes/reservado.png")), scroll_table, null);
 		scroll_table.setVisible(true);
+//		DatosFormR datosFormR= new DatosFormR();
+//		datosFormR.verH(tbReservas);
+		tbReservas.addMouseListener(new MouseAdapter() {
+	
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				 
+				
+				 DatosFormR datosFormR = new DatosFormR();
+				    datosFormR.selecR(tbReservas, txtBuscar, txtBuscar, txtBuscar, txtBuscar);
+		
+			}});
 		
 		
 		
@@ -254,6 +266,8 @@ public class Busqueda extends JFrame {
 		btnbuscar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 		contentPane.add(btnbuscar);
 		
+		
+		
 		JLabel lblBuscar = new JLabel("BUSCAR");
 		lblBuscar.setBounds(0, 0, 122, 35);
 		btnbuscar.add(lblBuscar);
@@ -261,7 +275,37 @@ public class Busqueda extends JFrame {
 		lblBuscar.setForeground(Color.WHITE);
 		lblBuscar.setFont(new Font("Roboto", Font.PLAIN, 18));
 		
+		
+		
+		
+		
+		
 		JPanel btnEditar = new JPanel();
+		btnEditar.addMouseListener(new MouseAdapter() {
+			
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
+//				DatosFormR datosFormR = new DatosFormR();
+//				datosFormR.ModificarMySQLR(tbReservas, null, null, txtBuscar, null);
+//			
+//		        JDateChooser txtFechaEntrada = DR.FechaEntrada; // Reemplaza "tuFechaEntrada" con la instancia de tu JDateChooser
+//		        JDateChooser txtFechaSalida = tuFechaSalida; // Reemplaza "tuFechaSalida" con la instancia de tu JDateChooser
+//		        JTextField txtValor = tuCampoDeValor; // Reemplaza "tuCampoDeValor" con la instancia de tu JTextField
+//		        JComboBox<String> txtFormaPago = tuComboBoxDeFormaDePago; // Reemplaza "tuComboBoxDeFormaDePago" con la instancia de tu JComboBox
+//
+//		        try {
+//		            ModificarMySQLR(tbReservas, txtFechaEntrada, txtFechaSalida, txtValor, txtFormaPago);
+//		        } catch (ClassNotFoundException ex) {
+//		            ex.printStackTrace();
+//		        }
+				
+				ReservasView reservas = new ReservasView();
+				reservas.setVisible(true);
+				dispose();
+
+			}
+		});
 		btnEditar.setLayout(null);
 		btnEditar.setBackground(new Color(12, 138, 199));
 		btnEditar.setBounds(635, 508, 122, 35);
@@ -290,6 +334,10 @@ public class Busqueda extends JFrame {
 		btnEliminar.add(lblEliminar);
 		setResizable(false);
 	}
+	
+	
+	
+	
 	
 //Código que permite mover la ventana por la pantalla según la posición de "x" y "y"
 	 private void headerMousePressed(java.awt.event.MouseEvent evt) {

@@ -28,6 +28,7 @@ public class DatosHuespedes {
 			PS.setString(4, Nacionalidad);
 			PS.setString(5, Telefono);
 			PS.setString(6, IdReserva);
+			
 			int res = PS.executeUpdate();
 			if(res>0) {
 				JOptionPane.showMessageDialog(null, "se guardo el huesped");

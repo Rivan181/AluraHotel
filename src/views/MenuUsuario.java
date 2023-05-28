@@ -1,25 +1,23 @@
 package views;
 
-import java.awt.EventQueue;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import java.awt.Color;
+import java.awt.EventQueue;
 import java.awt.Font;
-import java.awt.event.ActionListener;
+import java.awt.SystemColor;
+import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.ActionEvent;
-import java.awt.Toolkit;
-import javax.swing.SwingConstants;
 import java.awt.event.MouseMotionAdapter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.awt.SystemColor;
+
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JSeparator;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
 
 @SuppressWarnings("serial")
 public class MenuUsuario extends JFrame {
@@ -118,6 +116,7 @@ public class MenuUsuario extends JFrame {
 		
 		JPanel btnBusqueda = new JPanel();
 		btnBusqueda.addMouseListener(new MouseAdapter() {
+			
 			@Override
 			public void mouseEntered(MouseEvent e) {
 				btnBusqueda.setBackground(new Color(118, 187, 223));				
@@ -130,6 +129,9 @@ public class MenuUsuario extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				Busqueda busqueda = new Busqueda();
 				busqueda.setVisible(true);
+//				DatosFormR datosFormR= new DatosFormR();
+//				datosFormR.verH(tbReservas);
+				
 				dispose();
 			}
 		});

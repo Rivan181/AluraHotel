@@ -1,38 +1,34 @@
 package views;
 
-import java.awt.EventQueue;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import java.awt.SystemColor;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.ImageIcon;
 import java.awt.Color;
-import javax.swing.JTextField;
-import com.toedter.calendar.JDateChooser;
-
-import Logica.DatosReserva;
-import infra.MySQLConnection;
-
+import java.awt.EventQueue;
 import java.awt.Font;
-import javax.swing.JComboBox;
-import javax.swing.DefaultComboBoxModel;
-import java.text.Format;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.awt.SystemColor;
+import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
-import java.awt.Toolkit;
-import java.beans.PropertyChangeListener;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JSeparator;
+import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
+
+import com.toedter.calendar.JDateChooser;
+
+import Logica.DatosFormR;
 
 
 @SuppressWarnings("serial")
@@ -48,7 +44,8 @@ public class ReservasView extends JFrame {
 	int xMouse, yMouse;
 	private JLabel labelExit;
 	private JLabel labelAtras;
-	private DatosReserva DR;
+	
+
 
 	/**
 	 * Launch the application.
@@ -86,7 +83,7 @@ public class ReservasView extends JFrame {
 		setLocationRelativeTo(null);
 		setUndecorated(true);
 		
-		DR = new DatosReserva();
+
 
 		
 		JPanel panel = new JPanel();
@@ -305,18 +302,19 @@ public class ReservasView extends JFrame {
 		txtValor.setColumns(10);
 
 
-		txtFormaPago = new JComboBox();
+		txtFormaPago = new JComboBox<String>();
 		txtFormaPago.setBounds(68, 417, 289, 38);
 		txtFormaPago.setBackground(SystemColor.text);
 		txtFormaPago.setBorder(new LineBorder(new Color(255, 255, 255), 1, true));
 		txtFormaPago.setFont(new Font("Roboto", Font.PLAIN, 16));
-		txtFormaPago.setModel(new DefaultComboBoxModel(new String[] {"Tarjeta de Crédito", "Tarjeta de Débito", "Dinero en efectivo"}));
+		txtFormaPago.setModel(new DefaultComboBoxModel<String>(new String[] {"Tarjeta de Crédito", "Tarjeta de Débito", "Dinero en efectivo"}));
 		panel.add(txtFormaPago);
 
 		JPanel btnsiguiente = new JPanel();
 		btnsiguiente.addMouseListener(new MouseAdapter() {
+			
 			@Override
-			public void mouseClicked(MouseEvent e) {
+		   public void mouseClicked(MouseEvent e) {
 				Date fechaEntrada = txtFechaEntrada.getDate();
 				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 				String fEntrada = dateFormat.format(fechaEntrada);
@@ -327,10 +325,14 @@ public class ReservasView extends JFrame {
 
 			    float valor = 3;
 				String Pago = txtFormaPago.getSelectedItem().toString();
+			
+				DatosFormR datosFormR= new DatosFormR();
+				datosFormR.GuardarMySQLR(fEntrada, fSalida, valor, Pago);
+		
 				
-				DR.insertDatos(fEntrada, fSalida, valor, Pago);
+			JOptionPane.showMessageDialog(null,  "se guardo el registro");
 				
-				if	(ReservasView.txtFechaEntrada.getDate() != null && ReservasView.txtFechaSalida.getDate() != null) {		
+				if	(txtFechaEntrada.getDate() != null && txtFechaSalida.getDate() != null) {		
 					RegistroHuesped registro = new RegistroHuesped();
 					registro.setVisible(true);
 					
