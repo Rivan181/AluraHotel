@@ -8,6 +8,7 @@ import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -24,12 +25,13 @@ import javax.swing.border.EmptyBorder;
 
 import com.toedter.calendar.JDateChooser;
 
-import Logica.DatosFormH;
+import Logica.DatosFormR;
 
 @SuppressWarnings("serial")
 public class RegistroHuesped extends JFrame {
 
 
+	
 	private JPanel contentPane;
 	private JTextField txtNombre;
 	private JTextField txtApellido;
@@ -41,6 +43,7 @@ public class RegistroHuesped extends JFrame {
 	private JLabel labelAtras;
 	int xMouse, yMouse;
 	
+
 
 	
 
@@ -63,8 +66,11 @@ public class RegistroHuesped extends JFrame {
 
 	/**
 	 * Create the frame.
+	 * @throws SQLException 
+	 * @throws ClassNotFoundException 
 	 */
-	public RegistroHuesped() {
+	
+	public RegistroHuesped() throws ClassNotFoundException, SQLException {
 		
 		setIconImage(Toolkit.getDefaultToolkit().getImage(RegistroHuesped.class.getResource("/imagenes/lOGO-50PX.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -212,13 +218,17 @@ public class RegistroHuesped extends JFrame {
 		lblNumeroReserva.setFont(new Font("Roboto Black", Font.PLAIN, 18));
 		contentPane.add(lblNumeroReserva);
 		
+		DatosFormR datosFormR = new DatosFormR();
 		txtNreserva = new JTextField();
 		txtNreserva.setFont(new Font("Roboto", Font.PLAIN, 16));
 		txtNreserva.setBounds(560, 495, 285, 33);
 		txtNreserva.setColumns(10);
 		txtNreserva.setBackground(Color.WHITE);
 		txtNreserva.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+		datosFormR.BuscaIdReserva(txtNreserva);
 		contentPane.add(txtNreserva);
+		
+	
 		
 		JSeparator separator_1_2 = new JSeparator();
 		separator_1_2.setBounds(560, 170, 289, 2);
@@ -260,10 +270,13 @@ public class RegistroHuesped extends JFrame {
 		btnguardar.setBounds(723, 560, 122, 35);
 		btnguardar.addMouseListener(new MouseAdapter() {
 			
+		
+
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				
-
+				DatosFormR datosFormR = new DatosFormR();
+				
 				Date fechaNac = txtFechaN.getDate();
 				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 				
@@ -274,8 +287,8 @@ public class RegistroHuesped extends JFrame {
 				String Telefono = txtTelefono.getText();
 				String IdReserva = txtNreserva.getText();
 				
-				DatosFormH datosFormH= new DatosFormH();
-				datosFormH.GuardarMySQLH(Nombre, Apellido, FechadeNacimiento, Nacionalidad, Telefono, IdReserva);
+				
+				datosFormR.GuardarMySQLH(Nombre, Apellido, FechadeNacimiento, Nacionalidad, Telefono, IdReserva);
 				
 				
 				System.out.println("se imprimio");

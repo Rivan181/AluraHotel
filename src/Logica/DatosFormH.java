@@ -11,7 +11,7 @@ public class DatosFormH {
 	String Apellido;
 	String Nacionalidad;
 	String Telefono;
-	String IdReserva;
+	String Id;
 	String FechadeNacimiento;
 	
 
@@ -40,10 +40,10 @@ public class DatosFormH {
 		Telefono = telefono;
 	}
 	public String getIdReserva() {
-		return IdReserva;
+		return Id;
 	}
 	public void setIdReserva(String idReserva) {
-		IdReserva = idReserva;
+		Id = idReserva;
 	}
 	public String getFechadeNacimiento() {
 		return FechadeNacimiento;
@@ -51,14 +51,14 @@ public class DatosFormH {
 	public void setFechadeNacimiento(String fechadeNacimiento) {
 		FechadeNacimiento = fechadeNacimiento;
 	}
-	public  void GuardarMySQLH(String Nombre, String Apellido, String FechadeNacimiento, String Nacionalidad, String Telefono, String IdReserva ) {
+	public  void GuardarMySQLH(String Nombre, String Apellido, String FechadeNacimiento, String Nacionalidad, String Telefono, String Id ) {
 		
 		setNombre(Nombre);
 		setApellido(Apellido);
 		setFechadeNacimiento(FechadeNacimiento);
 		setNacionalidad(Nacionalidad);
 		setTelefono(Telefono);;
-		setIdReserva(IdReserva);
+		setIdReserva(Id);
 		
 		MySQLConnection CN = new MySQLConnection();
 		

@@ -10,6 +10,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -330,10 +331,21 @@ public class ReservasView extends JFrame {
 				datosFormR.GuardarMySQLR(fEntrada, fSalida, valor, Pago);
 		
 				
-			JOptionPane.showMessageDialog(null,  "se guardo el registro");
+				JOptionPane.showMessageDialog(null,  "se guardo el registro");
+			
+				
 				
 				if	(txtFechaEntrada.getDate() != null && txtFechaSalida.getDate() != null) {		
-					RegistroHuesped registro = new RegistroHuesped();
+					RegistroHuesped registro = null;
+					try {
+						registro = new RegistroHuesped();
+					} catch (ClassNotFoundException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 					registro.setVisible(true);
 					
 				} else {

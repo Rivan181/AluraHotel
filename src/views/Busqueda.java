@@ -11,7 +11,6 @@ import java.awt.event.MouseMotionAdapter;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
@@ -23,7 +22,6 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
-import Logica.BuscarH;
 import Logica.BuscarR;
 import Logica.DatosFormR;
 
@@ -40,6 +38,7 @@ public class Busqueda extends JFrame {
 	private JLabel labelExit;
 	int xMouse, yMouse;
 	ReservasView RD;
+	
 	
 
 
@@ -248,15 +247,15 @@ public class Busqueda extends JFrame {
 					tbReservas.setModel(modelo);
 			        
 			        
-			        String buscarH = txtBuscar.getText();
-			        DefaultTableModel modeloH = null;
-					try {
-						modeloH = new BuscarH().buscarH(buscarH);
-					} catch (ClassNotFoundException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-					tbHuespedes.setModel(modeloH);
+//			        String buscarH = txtBuscar.getText();
+//			        DefaultTableModel modeloH = null;
+//					try {
+//						//modeloH = new BuscarH().buscarH(buscarH);
+//					} catch (ClassNotFoundException e1) {
+//						// TODO Auto-generated catch block
+//						e1.printStackTrace();
+//					}
+//					tbHuespedes.setModel(modeloH);
 
 			}
 		});
@@ -286,7 +285,16 @@ public class Busqueda extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				
-//				DatosFormR datosFormR = new DatosFormR();
+				DatosFormR datosFormR = new DatosFormR();
+				try {
+					datosFormR.ModificarMySQLR(tbReservas);
+					datosFormR.verH(tbReservas);
+				} catch (ClassNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+				
 //				datosFormR.ModificarMySQLR(tbReservas, null, null, txtBuscar, null);
 //			
 //		        JDateChooser txtFechaEntrada = DR.FechaEntrada; // Reemplaza "tuFechaEntrada" con la instancia de tu JDateChooser
@@ -300,9 +308,9 @@ public class Busqueda extends JFrame {
 //		            ex.printStackTrace();
 //		        }
 				
-				ReservasView reservas = new ReservasView();
-				reservas.setVisible(true);
-				dispose();
+//				ReservasView reservas = new ReservasView();
+//				reservas.setVisible(true);
+//				dispose();
 
 			}
 		});
@@ -326,6 +334,21 @@ public class Busqueda extends JFrame {
 		btnEliminar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 		contentPane.add(btnEliminar);
 		
+		btnEliminar.addMouseListener(new MouseAdapter() {
+			
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
+				DatosFormR datosFormR = new DatosFormR();
+				try {
+					datosFormR.EliminarMySQLR(tbReservas);
+					datosFormR.verH(tbReservas);
+				} catch (ClassNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+			});
 		JLabel lblEliminar = new JLabel("ELIMINAR");
 		lblEliminar.setHorizontalAlignment(SwingConstants.CENTER);
 		lblEliminar.setForeground(Color.WHITE);
