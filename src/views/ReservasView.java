@@ -29,7 +29,7 @@ import javax.swing.border.LineBorder;
 
 import com.toedter.calendar.JDateChooser;
 
-import Logica.DatosFormR;
+import Logica.ReservasDao;
 
 
 @SuppressWarnings("serial")
@@ -327,7 +327,7 @@ public class ReservasView extends JFrame {
 			    float valor = 3;
 				String Pago = txtFormaPago.getSelectedItem().toString();
 			
-				DatosFormR datosFormR= new DatosFormR();
+				ReservasDao datosFormR= new ReservasDao();
 				datosFormR.GuardarMySQLR(fEntrada, fSalida, valor, Pago);
 		
 				

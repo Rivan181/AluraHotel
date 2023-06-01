@@ -11,6 +11,7 @@ import java.awt.event.MouseMotionAdapter;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
@@ -22,8 +23,8 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
-import Logica.BuscarR;
-import Logica.DatosFormR;
+import Logica.HuespedesDao;
+import Logica.ReservasDao;
 
 @SuppressWarnings("serial")
 public class Busqueda extends JFrame {
@@ -116,7 +117,7 @@ public class Busqueda extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				 
 				
-				 DatosFormR datosFormR = new DatosFormR();
+				 ReservasDao datosFormR = new ReservasDao();
 				    datosFormR.selecR(tbReservas, txtBuscar, txtBuscar, txtBuscar, txtBuscar);
 		
 			}});
@@ -137,6 +138,17 @@ public class Busqueda extends JFrame {
 		JScrollPane scroll_tableHuespedes = new JScrollPane(tbHuespedes);
 		panel.addTab("Huéspedes", new ImageIcon(Busqueda.class.getResource("/imagenes/pessoas.png")), scroll_tableHuespedes, null);
 		scroll_tableHuespedes.setVisible(true);
+		tbHuespedes.addMouseListener(new MouseAdapter() {
+			
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				 
+				
+				 HuespedesDao huespedesDao= new HuespedesDao();
+				 huespedesDao.selecH(tbHuespedes, txtBuscar, txtBuscar, txtBuscar, txtBuscar, txtBuscar, txtBuscar);
+		
+			}});
 		
 		JLabel lblNewLabel_2 = new JLabel("");
 		lblNewLabel_2.setIcon(new ImageIcon(Busqueda.class.getResource("/imagenes/Ha-100px.png")));
@@ -237,26 +249,18 @@ public class Busqueda extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				  String buscar = txtBuscar.getText();
-			        DefaultTableModel modelo = null;
+			        DefaultTableModel modeloR = null;
+			        DefaultTableModel modeloH = null;
 					try {
-						modelo = new BuscarR().buscar(buscar);
+						modeloR = new ReservasDao().buscarR(buscar);
+						modeloH = new HuespedesDao().buscarH(buscar);
 					} catch (ClassNotFoundException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
+						JOptionPane.showMessageDialog(null,"error "+ e1.toString());
 					}
-					tbReservas.setModel(modelo);
+					tbReservas.setModel(modeloR);
+					tbHuespedes.setModel(modeloH);
+			     
 			        
-			        
-//			        String buscarH = txtBuscar.getText();
-//			        DefaultTableModel modeloH = null;
-//					try {
-//						//modeloH = new BuscarH().buscarH(buscarH);
-//					} catch (ClassNotFoundException e1) {
-//						// TODO Auto-generated catch block
-//						e1.printStackTrace();
-//					}
-//					tbHuespedes.setModel(modeloH);
-
 			}
 		});
 		btnbuscar.setLayout(null);
@@ -285,32 +289,17 @@ public class Busqueda extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				
-				DatosFormR datosFormR = new DatosFormR();
+				ReservasDao datosFormR = new ReservasDao();
+				HuespedesDao dao = new HuespedesDao();
 				try {
 					datosFormR.ModificarMySQLR(tbReservas);
-					datosFormR.verH(tbReservas);
+					//dao.ModificarMySQLH(tbHuespedes);
+					datosFormR.verR(tbReservas);
+					//dao.verH(tbHuespedes);
 				} catch (ClassNotFoundException e1) {
-					// TODO Auto-generated catch block
+					JOptionPane.showMessageDialog(null, "error "+ e.toString());
 					e1.printStackTrace();
 				}
-				
-				
-//				datosFormR.ModificarMySQLR(tbReservas, null, null, txtBuscar, null);
-//			
-//		        JDateChooser txtFechaEntrada = DR.FechaEntrada; // Reemplaza "tuFechaEntrada" con la instancia de tu JDateChooser
-//		        JDateChooser txtFechaSalida = tuFechaSalida; // Reemplaza "tuFechaSalida" con la instancia de tu JDateChooser
-//		        JTextField txtValor = tuCampoDeValor; // Reemplaza "tuCampoDeValor" con la instancia de tu JTextField
-//		        JComboBox<String> txtFormaPago = tuComboBoxDeFormaDePago; // Reemplaza "tuComboBoxDeFormaDePago" con la instancia de tu JComboBox
-//
-//		        try {
-//		            ModificarMySQLR(tbReservas, txtFechaEntrada, txtFechaSalida, txtValor, txtFormaPago);
-//		        } catch (ClassNotFoundException ex) {
-//		            ex.printStackTrace();
-//		        }
-				
-//				ReservasView reservas = new ReservasView();
-//				reservas.setVisible(true);
-//				dispose();
 
 			}
 		});
@@ -339,10 +328,10 @@ public class Busqueda extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				
-				DatosFormR datosFormR = new DatosFormR();
+				ReservasDao datosFormR = new ReservasDao();
 				try {
 					datosFormR.EliminarMySQLR(tbReservas);
-					datosFormR.verH(tbReservas);
+					datosFormR.verR(tbReservas);
 				} catch (ClassNotFoundException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();

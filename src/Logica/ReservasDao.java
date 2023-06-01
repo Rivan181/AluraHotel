@@ -16,7 +16,7 @@ import javax.swing.table.TableRowSorter;
 
 import infra.MySQLConnection;
 
-public class DatosFormR {
+public class ReservasDao {
 	
 
 	String fEntrada;
@@ -93,6 +93,12 @@ public class DatosFormR {
 	public String getFechadeNacimiento() {
 		return FechadeNacimiento;
 	}
+	 public String getIdReserva() {
+		return IdReserva;
+	}
+	public void setIdReserva(String idReserva) {
+		IdReserva = idReserva;
+	}
 	public void setFechadeNacimiento(String fechadeNacimiento) {
 		FechadeNacimiento = fechadeNacimiento;
 	}
@@ -129,12 +135,64 @@ public class DatosFormR {
 	 
  }
 
- public String getIdReserva() {
-	return IdReserva;
+public DefaultTableModel buscarR(String buscar) throws ClassNotFoundException {
+	
+	String [] nombreCol = {"Id","FechaEntrada", "FechaSalida", "Valor", "FormaDePago"};
+	String [] datos = new String [5];
+	
+	DefaultTableModel modelo = new DefaultTableModel(null,nombreCol);
+	String consulta = "SELECT * FROM reservas WHERE Id  like '%"+buscar+"%' ";
+	//argumento de busqueda parcial  "SELECT * FROM reservas WHERE reservas.Id like '%"+buscar+"%' or FormaDePago like '%"+buscar+"%' ";
+   
+	Connection cn = null;
+	MySQLConnection CN = new MySQLConnection();
+    PreparedStatement PS = null;
+    ResultSet rs = null;
+    try {
+		cn = CN.Conexion();
+		PS = cn.prepareStatement(consulta);
+		rs = PS.executeQuery();
+		
+		while (rs.next()) {
+			
+			datos[0] = rs.getString("Id");
+			datos[1] = rs.getString("FechaEntrada");
+			datos[2] = rs.getString( "FechaSalida");
+			datos[3] = rs.getString("Valor");
+			datos[4] = rs.getString("FormaDePago");
+			modelo.addRow(datos);
+			
+		}
+		
+	} catch (SQLException e) {
+        e.printStackTrace();
+    } finally {
+        // Cerrar los recursos
+        if (rs != null) {
+            try {
+                rs.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        if (PS != null) {
+            try {
+                PS.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        if (cn != null) {
+            try {
+                cn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+	}
+    return modelo;
 }
-public void setIdReserva(String idReserva) {
-	IdReserva = idReserva;
-}
+
 public  void GuardarMySQLH(String Nombre, String Apellido, String FechadeNacimiento, String Nacionalidad, String Telefono, String IdReserva ) {
 		
 		setNombre(Nombre);
@@ -167,69 +225,9 @@ public  void GuardarMySQLH(String Nombre, String Apellido, String FechadeNacimie
 		}
 		
 	}
-public DefaultTableModel buscar (String buscar) throws ClassNotFoundException {
-		
-		String [] nombreCol = {"Id","FechaEntrada", "FechaSalida", "Valor", "FormaDePago"};
-		String [] datos = new String [5];
-		
-		DefaultTableModel modelo = new DefaultTableModel(null,nombreCol);
-		String consulta = "SELECT * FROM reservas WHERE Id  like '%"+buscar+"%' ";
-		//argumento de busqueda parcial  "SELECT * FROM reservas WHERE reservas.Id like '%"+buscar+"%' or FormaDePago like '%"+buscar+"%' ";
-	   
-		Connection cn = null;
-		MySQLConnection CN = new MySQLConnection();
-	    PreparedStatement PS = null;
-	    ResultSet rs = null;
-	    try {
-			cn = CN.Conexion();
-			PS = cn.prepareStatement(consulta);
-			rs = PS.executeQuery();
-			
-			while (rs.next()) {
-				
-				datos[0] = rs.getString("Id");
-				datos[1] = rs.getString("FechaEntrada");
-				datos[2] = rs.getString( "FechaSalida");
-				datos[3] = rs.getString("Valor");
-				datos[4] = rs.getString("FormaDePago");
-				modelo.addRow(datos);
-				
-			}
-			
-		} catch (SQLException e) {
-         e.printStackTrace();
-     } finally {
-         // Cerrar los recursos
-         if (rs != null) {
-             try {
-                 rs.close();
-             } catch (SQLException e) {
-                 e.printStackTrace();
-             }
-         }
-         if (PS != null) {
-             try {
-                 PS.close();
-             } catch (SQLException e) {
-                 e.printStackTrace();
-             }
-         }
-         if (cn != null) {
-             try {
-                 cn.close();
-             } catch (SQLException e) {
-                 e.printStackTrace();
-             }
-         }
-		}
-		
-	    
-	
-	    
-	    return modelo;
-		
-	}
- public void verH(JTable tbReservas) {
+
+
+public void verR(JTable tbReservas) {
 	 MySQLConnection CN = new MySQLConnection();
 	 DefaultTableModel modelo = new DefaultTableModel();
 	 
@@ -267,6 +265,7 @@ public DefaultTableModel buscar (String buscar) throws ClassNotFoundException {
 	}
 	 
  }
+
  public void selecR(JTable tbReservas, JTextField txtFechaEntrada, JTextField txtFechaSalida, JTextField Valor, JTextField txtFormaPago) {
 	    try {
 	        int fila = tbReservas.getSelectedRow();

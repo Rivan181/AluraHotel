@@ -25,7 +25,7 @@ import javax.swing.border.EmptyBorder;
 
 import com.toedter.calendar.JDateChooser;
 
-import Logica.DatosFormR;
+import Logica.ReservasDao;
 
 @SuppressWarnings("serial")
 public class RegistroHuesped extends JFrame {
@@ -218,7 +218,7 @@ public class RegistroHuesped extends JFrame {
 		lblNumeroReserva.setFont(new Font("Roboto Black", Font.PLAIN, 18));
 		contentPane.add(lblNumeroReserva);
 		
-		DatosFormR datosFormR = new DatosFormR();
+		ReservasDao datosFormR = new ReservasDao();
 		txtNreserva = new JTextField();
 		txtNreserva.setFont(new Font("Roboto", Font.PLAIN, 16));
 		txtNreserva.setBounds(560, 495, 285, 33);
@@ -275,7 +275,7 @@ public class RegistroHuesped extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				
-				DatosFormR datosFormR = new DatosFormR();
+				ReservasDao datosFormR = new ReservasDao();
 				
 				Date fechaNac = txtFechaN.getDate();
 				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
