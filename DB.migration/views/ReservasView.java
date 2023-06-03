@@ -35,12 +35,12 @@ import Logica.ReservasDao;
 @SuppressWarnings("serial")
 public class ReservasView extends JFrame {
 
-	protected static Date EntradaString = null;
-	protected static Date SalidaString = null;
+//	protected static Date EntradaString = null;
+//	protected static Date SalidaString = null;
 	private JPanel contentPane;
-	public static JTextField txtValor;
-	public static JDateChooser txtFechaEntrada;
-	public static JDateChooser txtFechaSalida;
+	public  JTextField txtValor;
+	public  JDateChooser txtFechaEntrada;
+	public  JDateChooser txtFechaSalida;
 	public static JComboBox<String> txtFormaPago;
 	int xMouse, yMouse;
 	private JLabel labelExit;
@@ -254,7 +254,7 @@ public class ReservasView extends JFrame {
 		lblSiguiente.setFont(new Font("Roboto", Font.PLAIN, 18));
 		lblSiguiente.setBounds(0, 0, 122, 35);
 		
-		
+		ReservasDao datosFormR= new ReservasDao();
 		//Campos que guardaremos en la base de datos
 		txtFechaEntrada = new JDateChooser();
 		txtFechaEntrada.getCalendarButton().setBackground(SystemColor.textHighlight);
@@ -282,6 +282,32 @@ public class ReservasView extends JFrame {
 		txtFechaSalida.addPropertyChangeListener(new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent evt) {
 				//Activa el evento, después del usuario seleccionar las fechas se debe calcular el valor de la reserva
+			if (txtFechaEntrada!=null&&txtFechaSalida!=null) {
+				try {
+					if(evt.getNewValue() != null) {
+						Date fechaEntrada = txtFechaEntrada.getDate();
+						SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+						String fEntrada = dateFormat.format(fechaEntrada);
+						
+						Date fechaSalida = txtFechaSalida.getDate();
+						SimpleDateFormat dateFormate = new SimpleDateFormat("yyyy-MM-dd");
+					    String fSalida = dateFormate.format(fechaSalida);
+					    
+					    
+					    float res = datosFormR.calculoValor(fEntrada, fSalida);
+					    String resString = String.valueOf(res);
+					    
+					    
+						txtValor.setText("$ "+resString.toString());
+						
+						
+					}
+				} catch (Exception e) {
+					
+				}
+				
+				
+			}
 			}
 		});
 		txtFechaSalida.setDateFormatString("yyyy-MM-dd");
@@ -290,18 +316,19 @@ public class ReservasView extends JFrame {
 		panel.add(txtFechaSalida);
 		
 		
-	
 		txtValor = new JTextField();
 		txtValor.setBackground(SystemColor.text);
 		txtValor.setHorizontalAlignment(SwingConstants.CENTER);
 		txtValor.setForeground(Color.BLACK);
-		txtValor.setBounds(78, 328, 43, 33);
+		txtValor.setBounds(78, 328, 60, 33);
 		txtValor.setEditable(false);
 		txtValor.setFont(new Font("Roboto Black", Font.BOLD, 17));
 		txtValor.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+		txtValor.setVisible(true);
+	
 		panel.add(txtValor);
 		txtValor.setColumns(10);
-
+		
 
 		txtFormaPago = new JComboBox<String>();
 		txtFormaPago.setBounds(68, 417, 289, 38);
@@ -316,6 +343,7 @@ public class ReservasView extends JFrame {
 			
 			@Override
 		   public void mouseClicked(MouseEvent e) {
+				ReservasDao datosFormR= new ReservasDao();
 				Date fechaEntrada = txtFechaEntrada.getDate();
 				SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 				String fEntrada = dateFormat.format(fechaEntrada);
@@ -323,22 +351,18 @@ public class ReservasView extends JFrame {
 				Date fechaSalida = txtFechaSalida.getDate();
 				SimpleDateFormat dateFormate = new SimpleDateFormat("yyyy-MM-dd");
 				String fSalida = dateFormate.format(fechaSalida);
-
-			    float valor = 3;
+				
 				String Pago = txtFormaPago.getSelectedItem().toString();
-			
-				ReservasDao datosFormR= new ReservasDao();
-				datosFormR.GuardarMySQLR(fEntrada, fSalida, valor, Pago);
+				
+				float vFinal=  datosFormR.calculoValor(fEntrada, fSalida);
+				datosFormR.GuardarMySQLR(fEntrada, fSalida, vFinal, Pago);
 		
-				
-				JOptionPane.showMessageDialog(null,  "se guardo el registro");
-			
-				
-				
 				if	(txtFechaEntrada.getDate() != null && txtFechaSalida.getDate() != null) {		
+					
 					RegistroHuesped registro = null;
 					try {
 						registro = new RegistroHuesped();
+						
 					} catch (ClassNotFoundException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();

@@ -25,6 +25,8 @@ public class HuespedesDao {
 	String Telefono;
 	String Id;
 	String FechadeNacimiento;
+	String IdReserva;
+
 	
 
 	public String getNombre() {
@@ -102,7 +104,7 @@ public class HuespedesDao {
 		String [] datos = new String [6];
 		
 		DefaultTableModel modeloH = new DefaultTableModel(null,nombreCol);
-		String consulta = "SELECT * FROM huespedes WHERE  Id  like '%"+buscar+"%' ";
+		String consulta = "SELECT * FROM huespedes WHERE  IdReserva  like '%"+buscar+"%' ";
 		//argumento de busqueda parcial  "SELECT * FROM reservas WHERE reservas.Id like '%"+buscar+"%' or FormaDePago like '%"+buscar+"%' ";
 	   
 		Connection cn = null;
@@ -126,6 +128,7 @@ public class HuespedesDao {
 			}
 			
 		} catch (SQLException e) {
+			System.out.println("error" +e.toString());
 	        e.printStackTrace();
 	    } finally {
 	        // Cerrar los recursos
@@ -169,9 +172,9 @@ public class HuespedesDao {
 		 modeloH.addColumn("Número de Reserva");
 		 
 			tbHuespedes.setModel(modeloH);
-		 String sql = "SELECT * FROM reservas";
+		 String sql = "SELECT * FROM huespedes";
 		 
-		 String[] datos = new String[5];
+		 String[] datos = new String[6];
 		 Statement st;
 		 try {
 			st = CN.Conexion().createStatement();
@@ -184,6 +187,7 @@ public class HuespedesDao {
 				datos[3] = rs.getString(4);
 				datos[4] = rs.getString(5);
 				datos[5] = rs.getString(6);
+			
 				modeloH.addRow(datos);
 				
 			}
@@ -191,6 +195,7 @@ public class HuespedesDao {
 			
 			
 		} catch (Exception e) {
+			System.out.println("error" + e.toString());
 		JOptionPane.showMessageDialog(null, "error");
 		}
 		 
@@ -246,7 +251,7 @@ public class HuespedesDao {
 		  
 	        MySQLConnection CN = new MySQLConnection();
 
-	        String SQL_UPDATE = "UPDATE huespedes SET Nombre = ' "+Nombre+" ', Apellido =  ' "+Apellido+" ', FechadeNacimiento = ' "+FechadeNacimiento+" ', Nacionalidad =  ' "+Nacionalidad+" 'Telefono = ' "+Telefono+" ' WHERE IdReserva = ' "+IdReserva+" '";
+	        String SQL_UPDATE = "UPDATE huespedes SET Nombre = ' "+Nombre+" ', Apellido =  ' "+Apellido+" ', FechadeNacimiento = ' "+FechadeNacimiento+" ', Nacionalidad =  ' "+Nacionalidad+" ',Telefono = ' "+Telefono+" ' WHERE IdReserva = ' "+IdReserva+"'" ;
 
 	        try {
 	            PreparedStatement ps = CN.Conexion().prepareStatement(SQL_UPDATE);
@@ -258,10 +263,34 @@ public class HuespedesDao {
 	            }
 
 	        } catch (SQLException e) {
-	            JOptionPane.showMessageDialog(null, "Error al modificar la reserva: " + e.toString());
+	        	System.out.println("Error al modificar la reserva:  " + e.toString());
+	          //  JOptionPane.showMessageDialog(null, "Error al modificar la reserva: " + e.toString());
 	        
 	        }}
 
+	public void EliminarMySQLH (JTable tbHuespedes) throws ClassNotFoundException {
+	    int fila = tbHuespedes.getSelectedRow();
+	    int IdReserva = Integer.parseInt(tbHuespedes.getValueAt(fila, 5).toString());
+
+	    
+	        MySQLConnection CN = new MySQLConnection();
+
+	        String SQL_DELETE = "DELETE FROM huespedes  WHERE IdReserva = ' "+IdReserva+" '";
+
+	        try {
+	            PreparedStatement ps = CN.Conexion().prepareStatement(SQL_DELETE);
+	             int rowsAffected = ps.executeUpdate();
+	            if (rowsAffected == 1) {
+	                JOptionPane.showMessageDialog(null, "La reserva ha sido eliminada correctamente.");
+	            } else {
+	                JOptionPane.showMessageDialog(null, "No se pudo eliminar la reserva.");
+	            }
+
+	        } catch (SQLException e) {
+	            JOptionPane.showMessageDialog(null, "Error al modificar la reserva: " + e.toString());
+	        
+	        }}
+	
 
 
 

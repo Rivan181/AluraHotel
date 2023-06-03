@@ -6,13 +6,19 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
+import javax.print.attribute.standard.JobMediaSheets;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
+
+import com.toedter.calendar.JDateChooser;
 
 import infra.MySQLConnection;
 
@@ -21,7 +27,7 @@ public class ReservasDao {
 
 	String fEntrada;
 	String fSalida;
-	 float valor = 3;
+	 float valor;
 	 String Pago;
 
 	String Nombre;
@@ -33,8 +39,11 @@ public class ReservasDao {
 	 private static ResultSet IdGen;
 	 MySQLConnection CN = new MySQLConnection();
 	 PreparedStatement PS = null;
-	
+	 public  String txtFechaEntrada;
+	 public  String txtFechaSalida;
 	 public String txtNreserva;
+	 float diaReserva = 25;
+	 float ValorFinal;
 	
 	 
 
@@ -141,7 +150,7 @@ public DefaultTableModel buscarR(String buscar) throws ClassNotFoundException {
 	String [] datos = new String [5];
 	
 	DefaultTableModel modelo = new DefaultTableModel(null,nombreCol);
-	String consulta = "SELECT * FROM reservas WHERE Id  like '%"+buscar+"%' ";
+	String consulta = "SELECT * FROM reservas WHERE Id  like '%"+buscar+"%' or FechaEntrada  like '%"+buscar+"%' or FechaSalida like '%"+buscar+"%' or FormaDePago like '%"+buscar+"%' "   ;
 	//argumento de busqueda parcial  "SELECT * FROM reservas WHERE reservas.Id like '%"+buscar+"%' or FormaDePago like '%"+buscar+"%' ";
    
 	Connection cn = null;
@@ -166,6 +175,7 @@ public DefaultTableModel buscarR(String buscar) throws ClassNotFoundException {
 		
 	} catch (SQLException e) {
         e.printStackTrace();
+        System.out.println("error"+e.toString());
     } finally {
         // Cerrar los recursos
         if (rs != null) {
@@ -225,7 +235,6 @@ public  void GuardarMySQLH(String Nombre, String Apellido, String FechadeNacimie
 		}
 		
 	}
-
 
 public void verR(JTable tbReservas) {
 	 MySQLConnection CN = new MySQLConnection();
@@ -330,6 +339,7 @@ public void verR(JTable tbReservas) {
  public void EliminarMySQLR (JTable tbReservas) throws ClassNotFoundException {
 	    int fila = tbReservas.getSelectedRow();
 	    int Id = Integer.parseInt(tbReservas.getValueAt(fila, 0).toString());
+	    
 
 	    
 	        MySQLConnection CN = new MySQLConnection();
@@ -348,9 +358,42 @@ public void verR(JTable tbReservas) {
 	        } catch (SQLException e) {
 	            JOptionPane.showMessageDialog(null, "Error al modificar la reserva: " + e.toString());
 	        
-	        }}
-	
- public  void BuscaIdReserva(JTextField txtNreserva) throws SQLException, ClassNotFoundException {
+	        }
+			}
+
+ public void EliminarMySQL (JTable tbReservas, JTable tbHuespedes) throws ClassNotFoundException {
+	    int filaR = tbReservas.getSelectedRow();
+	    int Id = Integer.parseInt(tbReservas.getValueAt(filaR, 0).toString());
+	    int filaH = tbHuespedes.getSelectedRow();
+	    int IdReserva = Integer.parseInt(tbHuespedes.getValueAt(filaH, 5).toString());
+
+
+	    
+	        MySQLConnection CN = new MySQLConnection();
+
+	        String SQL_DELETER = "DELETE reservas FROM reservas JOIN  reservas.Id=huespedes.IdReserva WHERE  huespedes.IdReserva = ' "+IdReserva+"   '";
+	        //String SQL_DELETEH = "DELETE FROM huespedes  WHERE IdReserva = ' "+IdReserva+" '";
+	        try {
+	            PreparedStatement ps = CN.Conexion().prepareStatement(SQL_DELETER);
+	            int rowsAffected = ps.executeUpdate();
+	          //  PreparedStatement pd = CN.Conexion().prepareStatement(SQL_DELETEH);
+	            ps.executeUpdate();
+	            
+	             rowsAffected = ps.executeUpdate();
+	         //    pd.executeUpdate();
+	            if (rowsAffected == 1) {
+	                JOptionPane.showMessageDialog(null, "La reserva ha sido eliminada correctamente.");
+	            } else {
+	                JOptionPane.showMessageDialog(null, "No se pudo eliminar la reserva.");
+	            }
+
+	        } catch (SQLException e) {
+	            JOptionPane.showMessageDialog(null, "Error al modificar la reserva: " + e.toString());
+	        
+	        }
+			}
+ 
+public  void BuscaIdReserva(JTextField txtNreserva) throws SQLException, ClassNotFoundException {
 	
 	 try {
 	 final String SQL_BUSCAR="Select MAX(Id) FROM reservas";
@@ -374,27 +417,38 @@ public void verR(JTable tbReservas) {
 	 }catch (Exception e){
 		 JOptionPane.showMessageDialog(null, "no muestra "+ e.toString());
 	 }
-//		 int fila = tbReservas.getSelectedRow();
-//		 int columna = tbReservas.getColumnCount();
-//		 Object[] datoId = new Object[columna];
-//		 datoId[0] = tbReservas.getValueAt(fila, 0);
-//		 
-//		 ID.setText(datoId[0].toString());
-//		 PS.executeUpdate();
-//		 
-//		  for (Object dato : datoId) {
-//           if (dato != null) {
-//               System.out.print(dato + " ");
-//           }
-//		  }
-
+}
 		
 	
-}}
 
 
+public float calculoValor (String  txtFechaEntrada, String txtFechaSalida) {
+	
+	try {
+		SimpleDateFormat fechaf = new SimpleDateFormat("yyyy-MM-dd");
+		Date fechaInicio = fechaf.parse(txtFechaEntrada);
+		Date fechaFinal = fechaf.parse(txtFechaSalida);
+		
+		long transcurrido = fechaFinal.getTime()-fechaInicio.getTime();
+		TimeUnit unidad = TimeUnit.DAYS;
+		long dias = unidad.convert(transcurrido, TimeUnit.MILLISECONDS);
+		ValorFinal = dias*diaReserva;
+	} catch (Exception e) {
+		System.out.println("no toma valor"+ e.toString());
+		
+	}
+	return ValorFinal;
 
+	
 
+}
+public float getValorFinal() {
+	return ValorFinal;
+}
+public void setValorFinal(float valorFinal) {
+	ValorFinal = valorFinal;
+}
 
+}
 
 

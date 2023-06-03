@@ -39,6 +39,7 @@ public class Busqueda extends JFrame {
 	private JLabel labelExit;
 	int xMouse, yMouse;
 	ReservasView RD;
+	private boolean seleccionTb;
 	
 	
 
@@ -112,11 +113,13 @@ public class Busqueda extends JFrame {
 //		datosFormR.verH(tbReservas);
 		tbReservas.addMouseListener(new MouseAdapter() {
 	
-
+		
+			
+			
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				 
-				
+			
+				seleccionTb = true;
 				 ReservasDao datosFormR = new ReservasDao();
 				    datosFormR.selecR(tbReservas, txtBuscar, txtBuscar, txtBuscar, txtBuscar);
 		
@@ -144,8 +147,9 @@ public class Busqueda extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				 
-				
+				seleccionTb = false;
 				 HuespedesDao huespedesDao= new HuespedesDao();
+				 
 				 huespedesDao.selecH(tbHuespedes, txtBuscar, txtBuscar, txtBuscar, txtBuscar, txtBuscar, txtBuscar);
 		
 			}});
@@ -245,18 +249,23 @@ public class Busqueda extends JFrame {
 		
 		JPanel btnbuscar = new JPanel();
 		btnbuscar.addMouseListener(new MouseAdapter() {
-			
+			ReservasDao daoR = new ReservasDao();
+			HuespedesDao daoH = new HuespedesDao();
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				  String buscar = txtBuscar.getText();
 			        DefaultTableModel modeloR = null;
 			        DefaultTableModel modeloH = null;
-					try {
-						modeloR = new ReservasDao().buscarR(buscar);
-						modeloH = new HuespedesDao().buscarH(buscar);
-					} catch (ClassNotFoundException e1) {
-						JOptionPane.showMessageDialog(null,"error "+ e1.toString());
-					}
+				
+						try {
+							modeloR = new ReservasDao().buscarR(buscar);
+							modeloH = new HuespedesDao().buscarH(buscar);
+						} catch (ClassNotFoundException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+				
+					
 					tbReservas.setModel(modeloR);
 					tbHuespedes.setModel(modeloH);
 			     
@@ -286,20 +295,32 @@ public class Busqueda extends JFrame {
 		JPanel btnEditar = new JPanel();
 		btnEditar.addMouseListener(new MouseAdapter() {
 			
+			
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				if (seleccionTb==true) {
+					ReservasDao datosFormR = new ReservasDao();
+					try {
+						datosFormR.ModificarMySQLR(tbReservas);
+						
+						datosFormR.verR(tbReservas);
+						
+					} catch (ClassNotFoundException e1) {
+						JOptionPane.showMessageDialog(null, "error "+ e.toString());
+						e1.printStackTrace();
+					}
+				}if (seleccionTb==false) {
+					HuespedesDao dao = new HuespedesDao();
+					try {
+						dao.ModificarMySQLH(tbHuespedes);
+						dao.verH(tbHuespedes);
+					} catch (ClassNotFoundException e1) {
+						System.out.println("errro" + e1.toString() );
+						e1.printStackTrace();
+					}
 				
-				ReservasDao datosFormR = new ReservasDao();
-				HuespedesDao dao = new HuespedesDao();
-				try {
-					datosFormR.ModificarMySQLR(tbReservas);
-					//dao.ModificarMySQLH(tbHuespedes);
-					datosFormR.verR(tbReservas);
-					//dao.verH(tbHuespedes);
-				} catch (ClassNotFoundException e1) {
-					JOptionPane.showMessageDialog(null, "error "+ e.toString());
-					e1.printStackTrace();
 				}
+				
 
 			}
 		});
@@ -324,19 +345,51 @@ public class Busqueda extends JFrame {
 		contentPane.add(btnEliminar);
 		
 		btnEliminar.addMouseListener(new MouseAdapter() {
-			
+			ReservasDao dao = new ReservasDao();
+			HuespedesDao daoH = new HuespedesDao();
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				
-				ReservasDao datosFormR = new ReservasDao();
+//				if(seleccionTb==true||seleccionTb==false) {
+//				try {
+//					dao.EliminarMySQL(tbReservas, tbHuespedes);
+//				} catch (ClassNotFoundException e1) {
+//					System.out.println("error de elimionar"+e1.toString());
+//					e1.printStackTrace();
+//				}
+//				}
+				if(seleccionTb==true) {
 				try {
-					datosFormR.EliminarMySQLR(tbReservas);
-					datosFormR.verR(tbReservas);
+					dao.EliminarMySQLR(tbReservas);
+					dao.verR(tbReservas);
+					
+				     JOptionPane.showMessageDialog(null,"elimina reserva");
+					daoH.EliminarMySQLH(tbHuespedes);
+					daoH.verH(tbHuespedes);
+					JOptionPane.showMessageDialog(null,"elimina huesped");
+				
+//					dao.verR(tbReservas);
+//					daoH.verH(tbHuespedes);
+				
 				} catch (ClassNotFoundException e1) {
-					// TODO Auto-generated catch block
+					System.out.println("error " +e1.toString());
 					e1.printStackTrace();
 				}
+			}else
+				if  (seleccionTb==false){
+				 try {
+					
+					dao.EliminarMySQLR(tbReservas);
+					daoH.EliminarMySQLH(tbHuespedes);
+					dao.verR(tbReservas);
+					daoH.verH(tbHuespedes);
+				} catch (ClassNotFoundException e1) {
+					System.out.println("error " +e1.toString());
+					e1.printStackTrace();
+				} 
+							
 			}
+				}
+			
 			});
 		JLabel lblEliminar = new JLabel("ELIMINAR");
 		lblEliminar.setHorizontalAlignment(SwingConstants.CENTER);
