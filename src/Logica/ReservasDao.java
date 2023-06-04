@@ -10,15 +10,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-import javax.print.attribute.standard.JobMediaSheets;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
-
-import com.toedter.calendar.JDateChooser;
 
 import infra.MySQLConnection;
 
@@ -362,26 +359,33 @@ public void verR(JTable tbReservas) {
 			}
 
  public void EliminarMySQL (JTable tbReservas, JTable tbHuespedes) throws ClassNotFoundException {
-	    int filaR = tbReservas.getSelectedRow();
+	  
+	 int filaR = tbReservas.getSelectedRow();
+	 int filaH = tbHuespedes.getSelectedRow();
+	 System.out.println(filaH);
+	 System.out.println(filaR);
+
+	 	
 	    int Id = Integer.parseInt(tbReservas.getValueAt(filaR, 0).toString());
-	    int filaH = tbHuespedes.getSelectedRow();
+	   
 	    int IdReserva = Integer.parseInt(tbHuespedes.getValueAt(filaH, 5).toString());
 
 
 	    
 	        MySQLConnection CN = new MySQLConnection();
 
-	        String SQL_DELETER = "DELETE reservas FROM reservas JOIN  reservas.Id=huespedes.IdReserva WHERE  huespedes.IdReserva = ' "+IdReserva+"   '";
-	        //String SQL_DELETEH = "DELETE FROM huespedes  WHERE IdReserva = ' "+IdReserva+" '";
+	        String SQL_DELETER = "DELETE FROM reservas WHERE Id = '" + Id + "'";
+	        String SQL_DELETEH = "DELETE FROM huespedes WHERE IdReserva = '" + IdReserva + "'";
 	        try {
 	            PreparedStatement ps = CN.Conexion().prepareStatement(SQL_DELETER);
-	            int rowsAffected = ps.executeUpdate();
-	          //  PreparedStatement pd = CN.Conexion().prepareStatement(SQL_DELETEH);
+	           PreparedStatement pd = CN.Conexion().prepareStatement(SQL_DELETEH);
+	           int rowsAffected = ps.executeUpdate();
+	           int rowsAffectedH = pd.executeUpdate();
+	            rowsAffectedH =   ps.executeUpdate();
+	            rowsAffected = pd.executeUpdate();
 	            ps.executeUpdate();
-	            
-	             rowsAffected = ps.executeUpdate();
-	         //    pd.executeUpdate();
-	            if (rowsAffected == 1) {
+	           pd.executeUpdate();
+	            if (rowsAffected ==1&&rowsAffectedH==1) {
 	                JOptionPane.showMessageDialog(null, "La reserva ha sido eliminada correctamente.");
 	            } else {
 	                JOptionPane.showMessageDialog(null, "No se pudo eliminar la reserva.");

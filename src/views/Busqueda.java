@@ -249,8 +249,6 @@ public class Busqueda extends JFrame {
 		
 		JPanel btnbuscar = new JPanel();
 		btnbuscar.addMouseListener(new MouseAdapter() {
-			ReservasDao daoR = new ReservasDao();
-			HuespedesDao daoH = new HuespedesDao();
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				  String buscar = txtBuscar.getText();
@@ -261,7 +259,6 @@ public class Busqueda extends JFrame {
 							modeloR = new ReservasDao().buscarR(buscar);
 							modeloH = new HuespedesDao().buscarH(buscar);
 						} catch (ClassNotFoundException e1) {
-							// TODO Auto-generated catch block
 							e1.printStackTrace();
 						}
 				
@@ -359,16 +356,10 @@ public class Busqueda extends JFrame {
 //				}
 				if(seleccionTb==true) {
 				try {
+					daoH.EliminarMySQLH(tbHuespedes);
 					dao.EliminarMySQLR(tbReservas);
 					dao.verR(tbReservas);
-					
-				     JOptionPane.showMessageDialog(null,"elimina reserva");
-					daoH.EliminarMySQLH(tbHuespedes);
 					daoH.verH(tbHuespedes);
-					JOptionPane.showMessageDialog(null,"elimina huesped");
-				
-//					dao.verR(tbReservas);
-//					daoH.verH(tbHuespedes);
 				
 				} catch (ClassNotFoundException e1) {
 					System.out.println("error " +e1.toString());

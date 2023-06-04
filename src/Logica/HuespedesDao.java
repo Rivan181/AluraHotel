@@ -93,7 +93,6 @@ public class HuespedesDao {
 			
 			
 		} catch (Exception e) {
-			// TODO: handle exception
 		}
 		
 	}
@@ -104,8 +103,7 @@ public class HuespedesDao {
 		String [] datos = new String [6];
 		
 		DefaultTableModel modeloH = new DefaultTableModel(null,nombreCol);
-		String consulta = "SELECT * FROM huespedes WHERE  IdReserva  like '%"+buscar+"%' ";
-		//argumento de busqueda parcial  "SELECT * FROM reservas WHERE reservas.Id like '%"+buscar+"%' or FormaDePago like '%"+buscar+"%' ";
+		String consulta = "SELECT * FROM huespedes WHERE  IdReserva  like '%"+buscar+"%' or Nombre like '%"+buscar+"%' or Apellido like '%"+buscar+"%' or Nacionalidad like '%"+buscar+"%' or Telefono like '%"+buscar+"%'   ";
 	   
 		Connection cn = null;
 		MySQLConnection CN = new MySQLConnection();
